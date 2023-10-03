@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RewriteRule ^assets/ - [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)$ index.php?mdtk=$1 [L,QSA]
