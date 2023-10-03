@@ -1,0 +1,13 @@
+.bd-placeholder-img {font-size: 1.125rem; text-anchor: middle; -webkit-user-select: none; -moz-user-select: none; user-select: none;}
+@media (min-width: 768px) {.bd-placeholder-img-lg {font-size: 3.5rem;}}
+.coverImg {position: relative; overflow: hidden; background-color: #111;}
+.coverImg:hover .coverContent {opacity: 1;}
+.coverImg:hover .coverImage {opacity: .3;}
+.coverImage {object-fit: cover; opacity: 1; transition: opacity .2s ease-in-out;}
+.coverContent {position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; opacity: 0; transition: opacity .2s ease-in-out;}
+.coverEditText {text-transform: uppercase; font-size: 12px; font-weight: bold; width: 80%; text-align: center;}
+
+.dropdown-large{ padding:1rem; }
+/* ============ desktop view ============ */
+@media all and (min-width: 992px) {.dropdown-large{min-width:500px;}}
+/* ============ desktop view .end// ============ */
