@@ -53,5 +53,5 @@ else:
 endif;
 
 if ($loadFullTemplate !== FALSE):
-	$ms->makeView("view/archive",$data);
+	$ms->makeView("view/platform",$data);
 endif;
