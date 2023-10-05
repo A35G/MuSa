@@ -17,3 +17,27 @@ With the first version currently available you will get what can be seen in the 
 With each advancement, the screenshots will be updated to reflect the new features included.
 
 <img src="./screenshots/Preview%20Box.png" width="48%"/> <img src="./screenshots/Preview%20Media.png" width="48%"/>
+
+# Usage
+
+1. Check that the **dbs** folder (or the folder for the archive you selected) has the proper read and write permissions.
+    * On first startup, the platform will parse the path indicated as the container for the media files and will generate the archive JSON format file.
+
+# Features
+
+-	**Completed**:
+
+    - [x] Searching for a video within the multimedia archive.
+
+-	**Upcoming**:
+
+    - [ ] Ability to associate a cover image with the video;
+    - [ ] Ability to customize the title of the video in the list;
+    - [ ] Ability to insert a short description to the video;
+    - [ ] Ability to add categories/tags to the video;
+    - [ ] Ability to associate a date/year with the video;
+    - [ ] Ability to filter the list of multimedia videos, by tags/categories or by year;
+    - [ ] Ability to regenerate the media archive when adding/editing/removing one or more videos;
+    - [ ] Language management for the Platform (currently only in Italian).
+
+ Any suggestion, comment or advice, is welcome.
