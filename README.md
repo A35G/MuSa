@@ -38,6 +38,8 @@ With each advancement, the screenshots will be updated to reflect the new featur
     - [ ] Ability to associate a date/year with the video;
     - [ ] Ability to filter the list of multimedia videos, by tags/categories or by year;
     - [ ] Ability to regenerate the media archive when adding/editing/removing one or more videos;
+    - [ ] Ability to insert into the archive, video files from subfolders;
+    - [ ] Ability to make video files private;
     - [ ] Language management for the Platform (currently only in Italian).
 
  Any suggestion, comment or advice, is welcome.
