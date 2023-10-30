@@ -1,0 +1,9 @@
+{
+    "search_placeholder": "Cerca:",
+    "search_label": "Hai cercato:",
+    "play_button": "Avvia",
+    "browser_not_support_embed_video": "Sono spiacente, il tuo Browser non supporta l'embed video!",
+    "media_not_available_error": "Errore nella ricezione del Video richiesto!",
+    "media_not_found_error": "Video non disponibile sul Server!",
+    "db_noexists_empty_noreadable": "Attenzione: errore nel Database dei file multimediali! Il file non esiste, risulta vuoto o non apribile in lettura!"
+}
