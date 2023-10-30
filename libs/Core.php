@@ -7,24 +7,102 @@ define('ROOT_DB', RPATH . '/dbs/');
 
 class Musa
 {
-    private string $sitePath;
+    public $settings = array();
 
+    /**
+     * Platform URI
+     * 
+     * @var string
+     */
+    private ?string $sitePath = NULL;
+
+    /**
+     * Path of multimedia files
+     * 
+     * @var string
+     */
     private string $mediaVideo = ROOT_MEDIA . "video";
+
+    /**
+     * List of video mimetype supported and permitted
+     * 
+     * @var array
+     */
     private array $permitVideoMime = array("video/ogg","video/mp4","video/webm");
 
+    /**
+     * Parsed informations of multimedia archive
+     * 
+     * @var array
+     */
     private array $preloadMedia = array();
 
-    function __construct()
+    /**
+     * Default Platform language
+     * 
+     * @var string
+     */
+    private string $language;
+
+    /**
+     * Content of loaded language file
+     * 
+     * @var array
+     */
+    private array $txtLang = array();
+
+    /**
+     * Class constructor
+     * 
+     * @return  void
+     */
+    public function __construct()
     {
-        $this->sitePath = $this->loadSystemUrl();
+        $this->settings = $this->loadSettings();
+
+        $this->loadSystemUrl();
+
+        $dataLang = $this->loadLanguage();
+        if ($dataLang !== FALSE):
+            $this->txtLang = $dataLang;
+        else:
+            echo 'No language file!';
+            exit(0);
+        endif;
 
         $dbjs = $this->check4db();
         if ($dbjs === FALSE):
-            die("Attenzione: errore nel Database dei file multimediali! Il file non esiste, risulta vuoto o non apribile in lettura!");
+            die($this->txtLang["db_noexists_empty_noreadable"]);
         endif;
     }
 
-    private function is_https()
+    private function loadSettings()
+    {
+        static $settings;
+
+        if (empty($settings)):
+            $file_path = realpath(__DIR__ . "/../config/config.php");
+            $found = FALSE;
+            if (file_exists($file_path)):
+                $found = TRUE;
+                require $file_path;
+            endif;
+
+            if ( ! $found):
+                echo 'The configuration file does not exist.';
+                exit(3);
+            endif;
+
+            if ( ! isset($settings) OR ! is_array($settings)):
+                echo 'Your config file does not appear to be formatted correctly.';
+                exit(3);
+            endif;
+        endif;
+
+        return $settings;
+    }
+
+    private function checkHttps(): bool
     {
         if ( ! empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off'):
             return TRUE;
@@ -39,24 +117,43 @@ class Musa
 
     private function loadSystemUrl()
     {
-        if (isset($_SERVER['SERVER_ADDR'])):
-            if (strpos($_SERVER['SERVER_ADDR'], ':') !== FALSE):
-                $serverAddr = '[' . $_SERVER['SERVER_ADDR'] . ']';
+        if (empty($this->settings['app_url'])):
+            if (isset($_SERVER['SERVER_ADDR'])):
+                $serverAddr = (strpos($_SERVER['SERVER_ADDR'], ':') !== FALSE) ? '['.$_SERVER['SERVER_ADDR'].']' : $_SERVER['SERVER_ADDR'];
+
+                if ($serverAddr === "127.0.0.1"):
+                    $serverAddr = "localhost";
+                endif;
+
+                $base_url = ($this->checkHttps() ? 'https' : 'http') . '://' . $serverAddr
+                    . substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
             else:
-                $serverAddr = $_SERVER['SERVER_ADDR'];
+                $base_url = 'http://localhost/';
             endif;
 
-            if ($serverAddr === "127.0.0.1"):
-                $serverAddr = "localhost";
-            endif;
-
-            $dataUrl = ($this->is_https() ? 'https' : 'http') . '://' . $serverAddr
-                . substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
+            $this->sitePath = $base_url;
         else:
-            $dataUrl = 'http://localhost/';
+            $this->sitePath = $this->settings['app_url'];
         endif;
+    }
 
-        return $dataUrl;
+    private function loadLanguage(string $locale = "it-IT")
+    {
+        $appLang = (empty($this->settings['app_lang'])) ? $locale : $this->settings['app_lang'];
+        if ( ! empty($appLang)):
+            if (file_exists(RPATH . "/locale/" . $appLang . ".json") !== FALSE && is_readable(RPATH . "/locale/" . $appLang . ".json") !== FALSE):
+                if ($this->checkEmptyFile(RPATH . "/locale/" . $appLang . ".json") !== FALSE):
+                    $l10n = file_get_contents(RPATH . "/locale/" . $appLang . ".json");
+                    if ($l10n !== FALSE && ! empty($l10n) && $this->checkIsValidJSON($l10n) !== FALSE):
+                        $fed = json_decode($l10n,TRUE);
+                        if (isset($fed) && is_array($fed) && ! empty($fed)):
+                            return $fed;
+                        endif;
+                    endif;
+                endif;
+            endif;
+        endif;
+        return FALSE;
     }
 
     private function check4db()
@@ -81,7 +178,7 @@ class Musa
         return $response;
     }
 
-    public function checkEmptyFile(string $pathFile)
+    private function checkEmptyFile(string $pathFile)
     {
         clearstatcache();
         return filesize($pathFile);
@@ -116,6 +213,11 @@ class Musa
                 endif;
             endif;
         endif;
+    }
+
+    public function getDataLanguage()
+    {
+        return $this->txtLang;
     }
 
     public function searchMediaByValue(string $mediacode = NULL)
@@ -183,7 +285,7 @@ class Musa
         return (NULL !== $pathFile) ? $this->sitePath . $pathFile : $this->sitePath;
     }
 
-    public function makeArchiveVideo()
+    private function makeArchiveVideo()
     {
         $response = FALSE;
 
@@ -279,6 +381,8 @@ class Musa
                 $response["archive"][] = $this->preloadMedia["archive"][$fi];
                 ++$fi;
             endforeach;
+
+            $response = array_merge($response,$this->txtLang);
 
             ob_start();
             $this->makeView("view/mediaBlock",$response);
