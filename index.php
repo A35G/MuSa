@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
 include __DIR__ . "/libs/Core.php";
+$lng = $ms->getDataLanguage();
 
 $data = array(
     "appContent"    =>  ""
@@ -34,6 +35,8 @@ elseif (isset($_POST["usaf"]) && NULL !== $_POST["usaf"]):
             $dtrsc = json_decode($mdf,TRUE);
             if (isset($dtrsc) && is_array($dtrsc) && array_key_exists("archive", $dtrsc) !== FALSE):
 
+		$dtrsc = array_merge($dtrsc,$lng);
+		    
             	$loadFullTemplate = FALSE;
 
                 ob_start();
@@ -53,5 +56,6 @@ else:
 endif;
 
 if ($loadFullTemplate !== FALSE):
+	$data = array_merge($data,$lng);
 	$ms->makeView("view/platform",$data);
 endif;
