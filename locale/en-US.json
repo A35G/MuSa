@@ -1,0 +1,9 @@
+{
+    "search_placeholder": "Search:",
+    "search_label": "You searched:",
+    "play_button": "Play",
+    "browser_not_support_embed_video": "Sorry, your Browser does not support video embedding!",
+    "media_not_available_error": "Error in receiving the requested Video!",
+    "media_not_found_error": "Video not available on the Server!",
+    "db_noexists_empty_noreadable": "Warning: error in the Media File Database! The file does not exist, is empty or cannot be opened for reading!"
+}
