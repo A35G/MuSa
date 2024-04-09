@@ -43,4 +43,8 @@ With each advancement, the screenshots will be updated to reflect the new featur
     - [ ] Language management for the Platform (currently only in Italian);
     - [ ] Portable version for USB/SD memories under development - alpha version started. 
 
+# "Portable" version
+
+The "portable" version currently in development and in "alpha" version, allows the MuSa Project to be used as an interpreter of the JSON archive without the use of a Web Server. It is convenient to use on devices without an internet connection.
+
  Any suggestion, comment or advice, is welcome.
